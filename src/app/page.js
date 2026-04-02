@@ -173,7 +173,8 @@ export default function HomePage() {
                   <Image
                     src={product.image}
                     alt={product.name}
-                    fill
+                    width={96}
+                    height={96}
                     className="aspect-square object-cover rounded-lg mb-3"
                   />
                   <div className="flex items-center gap-1 mb-1">

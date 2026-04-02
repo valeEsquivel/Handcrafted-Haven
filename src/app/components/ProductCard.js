@@ -15,7 +15,8 @@ export function ProductCard({ product, onAddToCart }) {
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-          fill
+          width={96}
+          height={96}
           onError={(e) => {
             e.target.src = `https://placehold.co/500x500/E8D5B0/7A5C3A?text=${encodeURIComponent(product.name)}`;
           }}

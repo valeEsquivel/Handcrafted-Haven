@@ -51,7 +51,8 @@ export default function ProductPage({ params }) {
             <Image
               src={product.image}
               alt={product.name}
-              fill
+              width={80}
+              height={80}
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.src = `https://placehold.co/600x600/E8D5B0/7A5C3A?text=${encodeURIComponent(product.name)}`;
