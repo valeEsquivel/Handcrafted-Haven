@@ -4,16 +4,18 @@ import Link from "next/link";
 import { Star, ShoppingCart, MapPin } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
+import Image from "next/image";
 
 export function ProductCard({ product, onAddToCart }) {
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col">
       {/* Image */}
       <Link href={`/product/${product.id}`} className="relative block aspect-square overflow-hidden bg-muted">
-        <img
+        <Image
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+          fill
           onError={(e) => {
             e.target.src = `https://placehold.co/500x500/E8D5B0/7A5C3A?text=${encodeURIComponent(product.name)}`;
           }}

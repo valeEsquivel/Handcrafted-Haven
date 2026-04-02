@@ -8,8 +8,9 @@ import { Button } from "@/app/components/ui/Button";
 import { Badge } from "@/app/components/ui/Badge";
 import { ProductCard } from "@/app/components/ProductCard";
 import {
-  ArrowLeft, Star, MapPin, ShoppingCart, Package, Tag, Weight,
+  Star, MapPin, ShoppingCart, Package, Tag, Weight,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function ProductPage({ params }) {
   const { id } = use(params);
@@ -47,9 +48,10 @@ export default function ProductPage({ params }) {
         <div className="grid md:grid-cols-2 gap-10 mb-16">
           {/* Image */}
           <div className="aspect-square rounded-2xl overflow-hidden bg-muted">
-            <img
+            <Image
               src={product.image}
               alt={product.name}
+              fill
               className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.src = `https://placehold.co/600x600/E8D5B0/7A5C3A?text=${encodeURIComponent(product.name)}`;
