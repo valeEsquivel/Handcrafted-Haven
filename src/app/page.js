@@ -5,6 +5,7 @@ import { Hammer, Gem, Scissors, Trees, Flame, Palette, ArrowRight, Star, Heart }
 import { ProductCard } from "./components/ProductCard";
 import { useCart } from "./store/cart";
 import { products, categories } from "./data/products";
+import Image from "next/image";
 
 const categoryIcons = {
   Hammer, Gem, Scissors, Trees, Flame, Palette,
@@ -169,10 +170,12 @@ export default function HomePage() {
                   href={`/product/${product.id}`}
                   className="bg-primary-foreground/10 border border-primary-foreground/20 rounded-xl p-4 hover:bg-primary-foreground/20 transition-colors text-left group"
                 >
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
-                    className="w-full aspect-square object-cover rounded-lg mb-3"
+                    width={96}
+                    height={96}
+                    className="aspect-square object-cover rounded-lg mb-3"
                   />
                   <div className="flex items-center gap-1 mb-1">
                     <Star className="w-3.5 h-3.5 fill-accent text-accent" />

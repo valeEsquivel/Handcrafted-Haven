@@ -1,6 +1,7 @@
 import { Playfair_Display, Lato } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
+import Link from "next/link";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -34,18 +35,18 @@ export default function RootLayout({ children }) {
             <div>
               <h4 className="font-semibold mb-3">Shop</h4>
               <ul className="space-y-1 text-sm opacity-80">
-                <li><a href="/category/pottery" className="hover:opacity-100">Pottery & Ceramics</a></li>
-                <li><a href="/category/jewelry" className="hover:opacity-100">Jewelry</a></li>
-                <li><a href="/category/textiles" className="hover:opacity-100">Textiles</a></li>
-                <li><a href="/category/woodcraft" className="hover:opacity-100">Woodcraft</a></li>
+                <li><Link href="/category/pottery" className="hover:opacity-100">Pottery & Ceramics</Link></li>
+                <li><Link href="/category/jewelry" className="hover:opacity-100">Jewelry</Link></li>
+                <li><Link href="/category/textiles" className="hover:opacity-100">Textiles</Link></li>
+                <li><Link href="/category/woodcraft" className="hover:opacity-100">Woodcraft</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-3">About</h4>
               <ul className="space-y-1 text-sm opacity-80">
-                <li><a href="#" className="hover:opacity-100">Our Story</a></li>
-                <li><a href="#" className="hover:opacity-100">Become a Seller</a></li>
-                <li><a href="#" className="hover:opacity-100">Contact Us</a></li>
+                <li><Link href="#" className="hover:opacity-100">Our Story</Link></li>
+                <li><Link href="#" className="hover:opacity-100">Become a Seller</Link></li>
+                <li><Link href="#" className="hover:opacity-100">Contact Us</Link></li>
               </ul>
             </div>
           </div>
