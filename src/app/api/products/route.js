@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import clientPromise from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -6,16 +6,22 @@ export async function GET(request) {
   const category = searchParams.get("category");
 
   try {
-    let sql = "SELECT * FROM products ORDER BY created_at DESC";
-    let params = [];
+    const client = await clientPromise;
+    const db = client.db("handcrafted-haven");
 
-    if (category) {
-      sql = "SELECT * FROM products WHERE category = $1 ORDER BY created_at DESC";
-      params = [category];
-    }
+    const query = category ? { category } : {};
+    const products = await db
+      .collection("products")
+      .find(query)
+      .sort({ createdAt: -1 })
+      .toArray();
 
-    const result = await query(sql, params);
-    return NextResponse.json(result.rows);
+    const result = products.map(({ _id, ...rest }) => ({
+      id: _id.toString(),
+      ...rest,
+    }));
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error("DB error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
