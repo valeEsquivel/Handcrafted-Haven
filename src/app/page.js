@@ -61,14 +61,14 @@ export default function HomePage() {
       <section className="bg-primary text-primary-foreground py-6">
         <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { value: "1,200+", label: "Unique Products" },
-            { value: "340+", label: "Skilled Artisans" },
-            { value: "50+", label: "Countries" },
-            { value: "4.8★", label: "Avg. Rating" },
+            { value: "1,200+", label: "Unique Products", href: "/" },
+            { value: "340+", label: "Skilled Artisans", href: "/artisans" },
+            { value: "50+", label: "Countries", href: "/" },
+            { value: "4.8★", label: "Avg. Rating", href: "/" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-2xl font-bold text-accent">{stat.value}</div>
-              <div className="text-sm opacity-80">{stat.label}</div>
+              <div className="text-sm opacity-80"><Link key={stat.label} href={stat.href}>{stat.label}</Link></div>
             </div>
           ))}
         </div>
