@@ -1,5 +1,3 @@
-import { categories } from "./products";
-
 export const artisans = [
   {
     artisanKey: "vesquivel",
@@ -10,6 +8,7 @@ export const artisans = [
     birthday: "11/03/1999",
     rating: "5",
     reviews: "90",
+    email: "vesquivelorellana@byupathway.edu",
     categories: [
         "Art & Paintings", "Textiles"
     ],
@@ -22,9 +21,10 @@ export const artisans = [
     country: "Nigeria",
     nickname: "Yeva",
     image: "https://picsum.photos/id/20/500/500",
-    birthday: "01/05/2005",
     rating: "5",
     reviews: "87",
+    birthday: "01/05/2005",
+    email: "fojobor@byupathway.edu",
     categories: [
         "Textiles", "Candles & Soaps", "Art & Paintings"
     ],
@@ -40,6 +40,7 @@ export const artisans = [
     rating: "5",
     reviews: "113",
     birthday: "21/09/1994",
+    email: "camuji@byupathway.edu",
     categories: [
         "Textiles", "Woodcraft", "Art & Paintings"
     ],
@@ -55,6 +56,7 @@ export const artisans = [
     rating: "5",
     reviews: "66",
     birthday: "19/11/1992",
+    email:"pzimondi@byupathway.edu",
     categories: [
         "Art & Paintings", "Jewelry", "Textiles", "Woodcraft", "Candles & Soaps"
     ],
@@ -70,6 +72,7 @@ export const artisans = [
     rating: "5",
     reviews: "120",
     birthday: "30/06/2002",
+    email: "ksekirangi@byupathway.edu",
     categories: [
         "Jewelry", "Art & Paintings", "Candles & Soaps"
     ],

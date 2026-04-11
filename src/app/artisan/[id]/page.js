@@ -4,11 +4,11 @@ import { use } from "react";
 import Link from "next/link";
 import { useCart } from "@/app/store/cart";
 import { artisans } from "@/app/data/artisans";
-import { Button } from "@/app/components/ui/Button";
+import { products } from "@/app/data/products";
 import { Badge } from "@/app/components/ui/Badge";
 import { ProductCard } from "@/app/components/ProductCard";
 import {
-  Star, MapPin, ShoppingCart, Cake
+  Star, MapPin, Mail, Cake
 } from "lucide-react";
 import Image from "next/image";
 
@@ -27,7 +27,7 @@ export default function ArtisanProfilePage({ params }) {
     );
   }
 
-//   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const related = products.filter((p) => p.artisan === id).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background py-10">
@@ -94,6 +94,10 @@ export default function ArtisanProfilePage({ params }) {
                 <Cake className="w-4 h-4 text-primary" />
                 <span>{artisan.birthday}</span>
               </div>
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Mail className="w-4 h-4 text-primary" />
+                <span>{artisan.email}</span>
+              </div>
             </div>
 
             {/* Tags */}
@@ -106,16 +110,16 @@ export default function ArtisanProfilePage({ params }) {
         </div>
 
         {/* Related Products */}
-        {/* {related.length > 0 && (
+        {related.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-foreground mb-6">More from this Category</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-6">Products Made by The Artisan</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} onAddToCart={() => addToCart(p)} />
               ))}
             </div>
           </section>
-        )} */}
+        )}
       </div>
     </div>
   );
