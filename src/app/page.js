@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Hammer, Gem, Scissors, Trees, Flame, Palette, ArrowRight, Star, Heart } from "lucide-react";
 import { ProductCard } from "./components/ProductCard";
 import { useCart } from "./store/cart";
-import { products, categories } from "./data/products";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const categoryIcons = {
   Hammer, Gem, Scissors, Trees, Flame, Palette,
@@ -13,6 +13,35 @@ const categoryIcons = {
 
 export default function HomePage() {
   const { addToCart } = useCart();
+  
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error: Loading categories:", error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error: Loading products:", error);
+    }
+  };
+
+  useEffect(() => {    
+    fetchCategories();
+    fetchProducts();
+  }, []);
+  
   const featured = products.filter((p) => p.in_stock).slice(0, 8);
 
   return (
@@ -61,14 +90,14 @@ export default function HomePage() {
       <section className="bg-primary text-primary-foreground py-6">
         <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { value: "1,200+", label: "Unique Products" },
-            { value: "340+", label: "Skilled Artisans" },
-            { value: "50+", label: "Countries" },
-            { value: "4.8★", label: "Avg. Rating" },
+            { value: "1,200+", label: "Unique Products", href: "/" },
+            { value: "340+", label: "Skilled Artisans", href: "/artisans" },
+            { value: "50+", label: "Countries", href: "/" },
+            { value: "4.8★", label: "Avg. Rating", href: "/" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-2xl font-bold text-accent">{stat.value}</div>
-              <div className="text-sm opacity-80">{stat.label}</div>
+              <div className="text-sm opacity-80"><Link key={stat.label} href={stat.href}>{stat.label}</Link></div>
             </div>
           ))}
         </div>
