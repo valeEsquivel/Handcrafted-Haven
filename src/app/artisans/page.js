@@ -1,12 +1,28 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { ArtisanCard } from "@/app/components/ArtisanCard";
-import { artisans } from "@/app/data/artisans";
+// import { artisans } from "@/app/data/artisans";
 import Link from "next/link";
 import { ArrowLeft, UsersRound } from "lucide-react";
 
 export default function ArtisanPage({ params }) {
+  const [artisans, setArtisans] = useState([]);
+
+  const fetchArtisans = async () => {
+    try {
+      const res = await fetch("/api/artisans");
+      const data = await res.json();
+      setArtisans(data);
+    } catch (error) {
+      console.error("Error: Loading artisans:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchArtisans()
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Page Header */}

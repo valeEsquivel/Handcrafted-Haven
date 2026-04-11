@@ -27,7 +27,7 @@ export default function ArtisanProfilePage({ params }) {
     );
   }
 
-  const related = products.filter((p) => p.artisan === id).slice(0, 4);
+  const related = products.filter((p) => p.artisanKey === id).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background py-10">

@@ -13,7 +13,7 @@ export const products = [
     rating: 4.8,
     reviews: 24,
     tags: ["ceramic", "handmade", "kitchen", "earth tones"],
-    artisan: "vesquivel",
+    artisanKey: "vesquivel",
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ export const products = [
     rating: 4.9,
     reviews: 18,
     tags: ["stoneware", "vase", "glazed", "home decor"],
-    artisan: "chinedu-k-amuji",
+    artisanKey: "chinedu-k-amuji",
   },
   {
     id: 3,
@@ -45,7 +45,7 @@ export const products = [
     rating: 4.7,
     reviews: 41,
     tags: ["copper", "pendant", "labradorite", "wire-wrapped"],
-    artisan: "yeva04",
+    artisanKey: "yeva04",
   },
   {
     id: 4,
@@ -61,7 +61,7 @@ export const products = [
     rating: 4.6,
     reviews: 57,
     tags: ["bracelet", "beaded", "linen", "natural", "set"],
-    artisan: "pzimondi",
+    artisanKey: "pzimondi",
   },
   {
     id: 5,
@@ -77,7 +77,7 @@ export const products = [
     rating: 4.9,
     reviews: 33,
     tags: ["wall hanging", "woven", "cotton", "wool", "home decor"],
-    artisan: "vesquivel",
+    artisanKey: "vesquivel",
   },
   {
     id: 6,
@@ -93,7 +93,7 @@ export const products = [
     rating: 4.8,
     reviews: 29,
     tags: ["tote", "linen", "hand-dyed", "indigo", "eco-friendly"],
-    artisan: "pzimondi",
+    artisanKey: "pzimondi",
   },
   {
     id: 7,
@@ -109,7 +109,7 @@ export const products = [
     rating: 5.0,
     reviews: 12,
     tags: ["oak", "serving board", "live edge", "food-safe", "kitchen"],
-    artisan: "chinedu-k-amuji",
+    artisanKey: "chinedu-k-amuji",
   },
   {
     id: 8,
@@ -125,7 +125,7 @@ export const products = [
     rating: 4.7,
     reviews: 38,
     tags: ["spoon", "cherry wood", "carved", "kitchen", "set"],
-    artisan: "chinedu-k-amuji",
+    artisanKey: "chinedu-k-amuji",
   },
   {
     id: 9,
@@ -141,7 +141,7 @@ export const products = [
     rating: 4.9,
     reviews: 64,
     tags: ["beeswax", "taper", "natural", "honey scent", "pair"],
-    artisan: "eddiedhin",
+    artisanKey: "eddiedhin",
   },
   {
     id: 10,
@@ -157,7 +157,7 @@ export const products = [
     rating: 4.8,
     reviews: 89,
     tags: ["soy", "lavender", "jar candle", "aromatherapy", "gift"],
-    artisan: "eddiedhin",
+    artisanKey: "eddiedhin",
   },
   {
     id: 11,
@@ -173,7 +173,7 @@ export const products = [
     rating: 4.9,
     reviews: 15,
     tags: ["watercolor", "botanical", "original art", "painting", "wall art"],
-    artisan: "yeva04",
+    artisanKey: "yeva04",
   },
   {
     id: 12,
@@ -189,7 +189,7 @@ export const products = [
     rating: 4.8,
     reviews: 9,
     tags: ["charcoal", "landscape", "drawing", "original art", "wall art"],
-    artisan: "yeva04",
+    artisanKey: "yeva04",
   },
 ];
 

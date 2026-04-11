@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Hammer, Gem, Scissors, Trees, Flame, Palette, ArrowRight, Star, Heart } from "lucide-react";
 import { ProductCard } from "./components/ProductCard";
 import { useCart } from "./store/cart";
-import { products, categories } from "./data/products";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 const categoryIcons = {
   Hammer, Gem, Scissors, Trees, Flame, Palette,
@@ -13,6 +13,35 @@ const categoryIcons = {
 
 export default function HomePage() {
   const { addToCart } = useCart();
+  
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Error: Loading categories:", error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Error: Loading products:", error);
+    }
+  };
+
+  useEffect(() => {    
+    fetchCategories();
+    fetchProducts();
+  }, []);
+  
   const featured = products.filter((p) => p.in_stock).slice(0, 8);
 
   return (
