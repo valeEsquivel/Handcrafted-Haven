@@ -1,15 +1,28 @@
 import clientPromise from "@/lib/db";
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
+  const artisanKey = searchParams.get("artisanKey");
+  const id = searchParams.get("id");
 
   try {
     const client = await clientPromise;
     const db = client.db("handcrafted-haven");
 
-    const query = category ? { category } : {};
+    const query = {};
+    if (category) query.category = category;
+    if (artisanKey) query.artisanKey = artisanKey;
+    // El JSON expone `id` desde `_id`; en la BD suele existir solo `_id`, no un campo `id`.
+    if (id) {
+      if (ObjectId.isValid(id)) {
+        query.$or = [{ _id: new ObjectId(id) }, { id }];
+      } else {
+        query.id = id;
+      }
+    }
     const products = await db
       .collection("products")
       .find(query)

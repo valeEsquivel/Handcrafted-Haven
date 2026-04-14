@@ -2,13 +2,19 @@ import clientPromise from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const slug = searchParams.get("slug");
+
   try {
     const client = await clientPromise;
     const db = client.db("handcrafted-haven");
 
+    const query = {};
+    if (slug) query.slug = slug;
+
     const categories = await db
       .collection("categories")
-      .find({})
+      .find(query)
       .sort({ createdAt: -1 })
       .toArray();
 
