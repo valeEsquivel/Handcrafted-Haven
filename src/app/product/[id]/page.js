@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/app/store/cart";
 import { products } from "@/app/data/products";
@@ -15,8 +15,38 @@ import Image from "next/image";
 export default function ProductPage({ params }) {
   const { id } = use(params);
   const { addToCart, items } = useCart();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const product = products.find((p) => p.id === Number(id));
+  const fetchProduct = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/products/${id}`);
+      const data = await res.json();
+      if (!res.ok || data?.error) {
+        setProduct(null);
+        return;
+      }
+      setProduct(data);
+    } catch (error) {
+      console.error("Error: Loading product:", error);
+      setProduct(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
+        <p className="text-muted-foreground">Loading product…</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -82,7 +112,9 @@ export default function ProductPage({ params }) {
               <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
             </div>
 
-            <p className="text-3xl font-bold text-primary mb-6">${product.price.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-primary mb-6">
+              ${Number(product.price ?? 0).toFixed(2)}
+            </p>
 
             <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 

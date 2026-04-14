@@ -4,8 +4,11 @@ import Link from "next/link";
 import { MapPin, ShoppingBasket } from "lucide-react";
 import { Button } from "./ui/Button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function ArtisanCard({ info }) {
+  const router = useRouter();
+
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col">
       {/* Image */}
@@ -40,7 +43,7 @@ export function ArtisanCard({ info }) {
         <div className="mt-auto flex items-center justify-between">
           <Button
             size="sm"
-            onClick={() => console("Hacia productos")}
+            onClick={() => router.push(`/artisans/${info.artisanKey}`)}
             className="gap-1.5"
           >
             <ShoppingBasket className="w-3.5 h-3.5" />
