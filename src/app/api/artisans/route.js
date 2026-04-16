@@ -1,35 +1,24 @@
 import clientPromise from "@/lib/db";
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const category = searchParams.get("category");
   const artisanKey = searchParams.get("artisanKey");
-  const id = searchParams.get("id");
 
   try {
     const client = await clientPromise;
     const db = client.db("handcrafted-haven");
 
     const query = {};
-    if (category) query.category = category;
     if (artisanKey) query.artisanKey = artisanKey;
-    if (id) {
-      if (ObjectId.isValid(id)) {
-        query.$or = [{ _id: new ObjectId(id) }, { id }];
-      } else {
-        query.id = id;
-      }
-    }
 
-    const products = await db
-      .collection("products")
+    const artisans = await db
+      .collection("artisans")
       .find(query)
       .sort({ createdAt: -1 })
       .toArray();
 
-    const result = products.map(({ _id, ...rest }) => ({
+    const result = artisans.map(({ _id, ...rest }) => ({
       id: _id.toString(),
       ...rest,
     }));
@@ -37,6 +26,6 @@ export async function GET(request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("DB error:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to fetch artisans" }, { status: 500 });
   }
 }

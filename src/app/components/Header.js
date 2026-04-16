@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Scissors, Menu, X } from "lucide-react";
+import { ShoppingCart, Scissors, Menu, X, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useCart } from "../store/cart";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Header() {
   const { items } = useCart();
+  const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -45,8 +48,9 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Cart + Mobile Menu */}
+        {/* Right side */}
         <div className="flex items-center gap-3">
+          {/* Cart */}
           <Link
             href="/cart"
             className="relative flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/85 transition-colors"
@@ -59,6 +63,44 @@ export default function Header() {
               </span>
             )}
           </Link>
+
+          {/* User Menu */}
+          {session ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md text-sm text-foreground hover:bg-muted transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span className="hidden sm:inline">{session.user.name?.split(" ")[0]}</span>
+              </button>
+              {userMenuOpen && (
+                <div className="absolute right-0 top-10 bg-card border border-border rounded-xl shadow-lg w-48 z-50">
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors rounded-t-xl"
+                  >
+                    <LayoutDashboard className="w-4 h-4" /> Dashboard
+                  </Link>
+                  <button
+                    onClick={() => { setUserMenuOpen(false); signOut({ callbackUrl: "/" }); }}
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-muted transition-colors rounded-b-xl"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md text-sm text-foreground hover:bg-muted transition-colors"
+            >
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Sign In</span>
+            </Link>
+          )}
 
           {/* Mobile menu toggle */}
           <button
@@ -83,6 +125,20 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          {session ? (
+            <>
+              <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors">
+                Dashboard
+              </Link>
+              <button onClick={() => signOut({ callbackUrl: "/" })} className="text-left px-3 py-2 text-sm text-destructive hover:bg-muted rounded-md transition-colors">
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link href="/login" onClick={() => setMenuOpen(false)} className="px-3 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-md transition-colors">
+              Sign In
+            </Link>
+          )}
         </nav>
       )}
     </header>

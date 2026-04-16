@@ -1,18 +1,52 @@
 "use client";
 
 import Link from "next/link";
-import { Hammer, Gem, Scissors, Trees, Flame, Palette, ArrowRight, Star, Heart } from "lucide-react";
+import { Hammer, Gem, Scissors, Trees, Flame, Palette, ArrowRight, Star, Heart, Search } from "lucide-react";
 import { ProductCard } from "./components/ProductCard";
 import { useCart } from "./store/cart";
-import { products, categories } from "./data/products";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-const categoryIcons = {
-  Hammer, Gem, Scissors, Trees, Flame, Palette,
-};
+const categoryIcons = { Hammer, Gem, Scissors, Trees, Flame, Palette };
 
 export default function HomePage() {
   const { addToCart } = useCart();
-  const featured = products.filter((p) => p.in_stock).slice(0, 8);
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        const data = await res.json();
+        setCategories(data);
+      } catch (error) { console.error("Error loading categories:", error); }
+    };
+
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        setProducts(data);
+      } catch (error) { console.error("Error loading products:", error); }
+    };
+
+    fetchCategories();
+    fetchProducts();
+  }, []);
+
+  const featured = products.filter((p) => {
+    const matchesSearch = search === "" ||
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.category.toLowerCase().includes(search.toLowerCase()) ||
+      p.artisan?.toLowerCase().includes(search.toLowerCase());
+    const matchesMin = minPrice === "" || p.price >= Number(minPrice);
+    const matchesMax = maxPrice === "" || p.price <= Number(maxPrice);
+    return p.in_stock && matchesSearch && matchesMin && matchesMax;
+  }).slice(0, 8);
 
   return (
     <div className="min-h-screen">
@@ -21,12 +55,7 @@ export default function HomePage() {
         className="relative py-24 px-4 overflow-hidden"
         style={{ background: "linear-gradient(135deg, #5C3A1E 0%, #8B6914 50%, #D4A96A 100%)" }}
       >
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
         <div className="container mx-auto text-center relative">
           <div className="inline-flex items-center gap-2 bg-white/20 text-white text-sm px-4 py-1.5 rounded-full mb-6">
             <Heart className="w-4 h-4 fill-white" />
@@ -40,16 +69,10 @@ export default function HomePage() {
             Shop one-of-a-kind pieces made by skilled artisans from around the world. Every item tells a story.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="#featured"
-              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-8 py-3 rounded-md hover:bg-accent hover:text-white transition-colors"
-            >
+            <Link href="#featured" className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-8 py-3 rounded-md hover:bg-accent hover:text-white transition-colors">
               Shop Now <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="#categories"
-              className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold px-8 py-3 rounded-md hover:bg-white/10 transition-colors"
-            >
+            <Link href="#categories" className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold px-8 py-3 rounded-md hover:bg-white/10 transition-colors">
               Browse Categories
             </Link>
           </div>
@@ -60,14 +83,14 @@ export default function HomePage() {
       <section className="bg-primary text-primary-foreground py-6">
         <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { value: "1,200+", label: "Unique Products" },
-            { value: "340+", label: "Skilled Artisans" },
-            { value: "50+", label: "Countries" },
-            { value: "4.8★", label: "Avg. Rating" },
+            { value: "1,200+", label: "Unique Products", href: "/" },
+            { value: "340+", label: "Skilled Artisans", href: "/artisans" },
+            { value: "50+", label: "Countries", href: "/" },
+            { value: "4.8★", label: "Avg. Rating", href: "/" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-2xl font-bold text-accent">{stat.value}</div>
-              <div className="text-sm opacity-80">{stat.label}</div>
+              <div className="text-sm opacity-80"><Link href={stat.href}>{stat.label}</Link></div>
             </div>
           ))}
         </div>
@@ -84,17 +107,11 @@ export default function HomePage() {
             {categories.map((cat) => {
               const Icon = categoryIcons[cat.icon];
               return (
-                <Link
-                  key={cat.slug}
-                  href={`/category/${cat.slug}`}
-                  className="group flex flex-col items-center gap-3 p-5 bg-card border border-border rounded-xl hover:border-primary hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center"
-                >
+                <Link key={cat.slug} href={`/category/${cat.slug}`} className="group flex flex-col items-center gap-3 p-5 bg-card border border-border rounded-xl hover:border-primary hover:shadow-md hover:-translate-y-1 transition-all duration-300 text-center">
                   <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary transition-colors">
                     {Icon && <Icon className="w-6 h-6 text-primary group-hover:text-primary-foreground transition-colors" />}
                   </div>
-                  <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                    {cat.label}
-                  </span>
+                  <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{cat.label}</span>
                 </Link>
               );
             })}
@@ -105,27 +122,56 @@ export default function HomePage() {
       {/* Featured Products */}
       <section id="featured" className="py-16 px-4 bg-muted/30">
         <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-4xl font-bold text-foreground mb-2">Featured Pieces</h2>
               <p className="text-muted-foreground">Handpicked works from our best artisans</p>
             </div>
-            <Link
-              href="/category/pottery"
-              className="hidden md:flex items-center gap-1 text-primary font-medium hover:underline"
-            >
+            <Link href="/category/pottery" className="hidden md:flex items-center gap-1 text-primary font-medium hover:underline">
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featured.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={() => addToCart(product)}
+
+          {/* Search and Filter */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search products, categories, artisans..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-9 pr-3 py-2 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors"
               />
-            ))}
+            </div>
+            <div className="flex gap-2 items-center">
+              <input
+                type="number"
+                placeholder="Min $"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="w-24 px-3 py-2 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors"
+              />
+              <span className="text-muted-foreground">—</span>
+              <input
+                type="number"
+                placeholder="Max $"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-24 px-3 py-2 rounded-md border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-colors"
+              />
+            </div>
           </div>
+
+          {featured.length === 0 ? (
+            <p className="text-muted-foreground text-center py-12">No products match your search.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {featured.map((product) => (
+                <ProductCard key={product.id} product={product} onAddToCart={() => addToCart(product)} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -134,9 +180,7 @@ export default function HomePage() {
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-3">Why Choose Handcrafted?</h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Every item in our marketplace is made by hand, with care, skill, and intention.
-            </p>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">Every item in our marketplace is made by hand, with care, skill, and intention.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -160,29 +204,18 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold mb-3 font-serif">Top Rated This Month</h2>
           <p className="opacity-80 mb-10 text-lg">Our customers&apos; absolute favourites</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {products
-              .filter((p) => p.rating >= 4.8 && p.in_stock)
-              .slice(0, 4)
-              .map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.id}`}
-                  className="bg-primary-foreground/10 border border-primary-foreground/20 rounded-xl p-4 hover:bg-primary-foreground/20 transition-colors text-left group"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full aspect-square object-cover rounded-lg mb-3"
-                  />
-                  <div className="flex items-center gap-1 mb-1">
-                    <Star className="w-3.5 h-3.5 fill-accent text-accent" />
-                    <span className="text-sm font-bold text-accent">{product.rating}</span>
-                    <span className="text-xs opacity-60">({product.reviews} reviews)</span>
-                  </div>
-                  <h3 className="font-semibold group-hover:text-accent transition-colors line-clamp-1">{product.name}</h3>
-                  <p className="text-sm opacity-70">${product.price.toFixed(2)}</p>
-                </Link>
-              ))}
+            {products.filter((p) => p.rating >= 4.8 && p.in_stock).slice(0, 4).map((product) => (
+              <Link key={product.id} href={`/product/${product.id}`} className="bg-primary-foreground/10 border border-primary-foreground/20 rounded-xl p-4 hover:bg-primary-foreground/20 transition-colors text-left group">
+                <Image src={product.image} alt={product.name} width={96} height={96} className="aspect-square object-cover rounded-lg mb-3" />
+                <div className="flex items-center gap-1 mb-1">
+                  <Star className="w-3.5 h-3.5 fill-accent text-accent" />
+                  <span className="text-sm font-bold text-accent">{product.rating}</span>
+                  <span className="text-xs opacity-60">({product.reviews} reviews)</span>
+                </div>
+                <h3 className="font-semibold group-hover:text-accent transition-colors line-clamp-1">{product.name}</h3>
+                <p className="text-sm opacity-70">${product.price.toFixed(2)}</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -191,13 +224,8 @@ export default function HomePage() {
       <section className="py-16 px-4 bg-accent/20">
         <div className="container mx-auto text-center">
           <h2 className="text-4xl font-bold text-foreground mb-3 font-serif">Are You an Artisan?</h2>
-          <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-            Join Handcrafted Haven and reach customers who genuinely value your craft.
-          </p>
-          <Link
-            href="#"
-            className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-md hover:bg-primary/85 transition-colors"
-          >
+          <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">Join Handcrafted Haven and reach customers who genuinely value your craft.</p>
+          <Link href="/artisans" className="inline-flex items-center gap-2 bg-primary text-primary-foreground font-semibold px-8 py-3 rounded-md hover:bg-primary/85 transition-colors">
             Start Selling Today <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
